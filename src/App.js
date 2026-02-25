@@ -1,25 +1,20 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState } from "react";
 
-function App() {
+export default function App() {
+  const [count, setCount] = useState(0);
+  const [inVisible, setIsVisible] = useState(true);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div style={{ padding: 20 }}>
+      <h2>EXAMPLE</h2>
+      <p>現在のカウント{count}</p>
+      <button onClick={() => setCount(count + 1)}>+1 する</button>
+
+      <hr />
+      <button onClick={() => setIsVisible(!setIsVisible)}>
+        表示の切り替え
+      </button>
+      {inVisible && <p>この文章は表示/非表示が切り替わります</p>}
     </div>
   );
 }
-
-export default App;
