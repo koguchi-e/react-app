@@ -3,24 +3,11 @@ import "./App.css";
 
 // 3-23
 class App extends Component {
-  data = ["This is list sample.", "test list", "converting list to array"];
+  input = "";
 
   constructor(props) {
     super(props);
-    this.state = {
-      list: this.data,
-    };
-    // this.doAction = this.doAction.bind(this);
   }
-
-  // doAction(e) {
-  //   let x = e.pageX;
-  //   let y = e.pageY;
-  //   this.data.push({ x: x, y: y });
-  //   this.setState({
-  //     list: this.data,
-  //   });
-  // }
 
   render() {
     return (
@@ -28,53 +15,61 @@ class App extends Component {
         <h1 className="bg-primary text-white display4">React</h1>
         <div className="container">
           <p className="subtitle">draw rectangle</p>
-          <List title="sample list" data={this.data}></List>
+          <Message title="Children!">aaa. aaa. aaa.</Message>
         </div>
       </div>
     );
   }
 }
 
-class List extends Component {
-  number = 1;
+class Message extends Component {
+  li = {
+    fontSize: "16pt",
+    fontWeight: "bold",
+    color: "#00f",
+  };
   render() {
+    let content = this.props.children;
+    let arr = content.split(". ");
+    let arr2 = [];
     let data = this.props.data;
+    for (let i = 0; i < arr.length; i++) {
+      if (arr[i].trim() != "") {
+        arr2.push(arr[i]);
+      }
+    }
+    let list = arr2.map((value, key) => (
+      <li className="list-group-item" style={this.li} key={key}>
+        {key + 1}. {value} .
+      </li>
+    ));
     return (
       <div>
-        <p className="h5 text-center">{this.props.title}</p>
-        <ul className="list-group">
-          {data.map((item, key) => (
-            <li className="lis-group-item" key={key}>
-              <Item number={key + 1} value={item}></Item>
-            </li>
-          ))}
-        </ul>
+        <h2>{this.props.title}</h2>
+        <ol className="list-group">{list}</ol>
       </div>
     );
   }
 }
 
-class Item extends Component {
-  itm = {
-    fontSize: "16pt",
-    color: "#00f",
-    textDecoration: "underline",
-    textDecorationColor: "#ddf",
-  };
+// class Item extends Component {
+//   itm = {
+//     textDecoration: "underline",
+//     textDecorationColor: "#ddf",
+//   };
 
-  num = {
-    fontWeight: "bold",
-    color: "red",
-  };
+//   num = {
+//     color: "red",
+//   };
 
-  render() {
-    return (
-      <p style={this.item}>
-        <span style={this.num}>[{this.props.number}]&nbsp;</span>
-        {this.props.value}
-      </p>
-    );
-  }
-}
+//   render() {
+//     return (
+//       <p style={this.item}>
+//         <span style={this.num}>[{this.props.number}]&nbsp;</span>
+//         {this.props.value}
+//       </p>
+//     );
+//   }
+// }
 
 export default App;
