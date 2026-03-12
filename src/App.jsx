@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import "./App.css";
+import TodoList from "./components/TodoList";
 
 function App() {
   const [todos, setTodos] = useState([
@@ -9,6 +10,7 @@ function App() {
 
   const [input, setInput] = useState("");
   const [error, setError] = useState("");
+  const [filter, setFilter] = useState("active");
 
   const addTodo = () => {
     const text = input.trim();
@@ -40,6 +42,17 @@ function App() {
     setTodos(todos.filter((todo) => todo.id !== id));
   };
 
+  const geFilteredTodos = () => {
+    if (filter === "active") return todos.filter((todo) => !todo.completed);
+    if (filter === "completed") return todos.filter((todo) => todo.completed);
+    return todos;
+  };
+
+  const filterdTodos = geFilteredTodos();
+
+  const activeCount = todos.filter((todo) => !todo.completed).length;
+  const completedCount = todos.filter((todo) => todo.completed).length;
+
   return (
     <div className="app">
       <h1>Todo</h1>
@@ -61,20 +74,31 @@ function App() {
         </button>
         {error && <p className="error-message">{error}</p>}
       </div>
-
-      <ul className="todo-list">
-        {todos.map((todo) => (
-          <li key={todo.id} className={todo.completed ? "completed" : ""}>
-            <input
-              type="checkbox"
-              checked={todo.completed}
-              onChange={() => toggleTodo(todo.id)}
-            ></input>
-            <span>{todo.text}</span>
-            <button onClick={() => deleteTodo(todo.id)}>削除</button>
-          </li>
-        ))}
-      </ul>
+      <div className="filter-buttons">
+        <button
+          onClick={() => setFilter("active")}
+          className={filter === "active" ? "active" : ""}
+        >
+          未完了({activeCount})
+        </button>
+        <button
+          onClick={() => setFilter("completed")}
+          className={filter === "completed" ? "active" : ""}
+        >
+          完了({completedCount})
+        </button>
+        <button
+          onClick={() => setFilter("all")}
+          className={filter === "all" ? "active" : ""}
+        >
+          すべて({todos.length})
+        </button>
+      </div>
+      <TodoList
+        todos={filterdTodos}
+        onToggle={toggleTodo}
+        onDelete={deleteTodo}
+      ></TodoList>
     </div>
   );
 }
