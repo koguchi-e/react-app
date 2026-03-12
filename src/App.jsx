@@ -1,105 +1,27 @@
-import { useState, useEffect } from "react";
+// import { useState, useEffect } from "react";
 import "./App.css";
-import TodoList from "./components/TodoList";
+
+import { createContext, useState } from "react";
+import WrapperA from "./WrapperA";
+import ComponentB from "./ComponentB";
+
+export const TextContext = createContext();
 
 function App() {
-  const [todos, setTodos] = useState([
-    { id: 1, text: "第3章の復習をする", completed: false },
-    { id: 2, text: "ToDoアプリを完成させる", completed: false },
-  ]);
-
-  const [input, setInput] = useState("");
-  const [error, setError] = useState("");
-  const [filter, setFilter] = useState("active");
-
-  const addTodo = () => {
-    const text = input.trim();
-    if (!text) {
-      setError("タスクを入力して下さい。");
-      return;
-    }
-    setTodos([
-      ...todos,
-      {
-        id: Date.now(),
-        text: input,
-        completed: false,
-      },
-    ]);
-    setInput("");
-    setError("");
-  };
-
-  const toggleTodo = (id) => {
-    setTodos(
-      todos.map((todo) =>
-        todo.id === id ? { ...todo, completed: !todo.completed } : todo
-      )
-    );
-  };
-
-  const deleteTodo = (id) => {
-    setTodos(todos.filter((todo) => todo.id !== id));
-  };
-
-  const geFilteredTodos = () => {
-    if (filter === "active") return todos.filter((todo) => !todo.completed);
-    if (filter === "completed") return todos.filter((todo) => todo.completed);
-    return todos;
-  };
-
-  const filterdTodos = geFilteredTodos();
-
-  const activeCount = todos.filter((todo) => !todo.completed).length;
-  const completedCount = todos.filter((todo) => todo.completed).length;
+  const [inputText, setInputText] = useState("");
 
   return (
-    <div className="app">
-      <h1>Todo</h1>
-
-      <div className="todo-form">
-        <label htmlFor="todo-input" className="form-label">
-          新しいタスク
-        </label>
+    <TextContext.Provider value={{ inputText, setInputText }}>
+      <div className="app">
         <input
-          id="todo-input"
           type="text"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          placeholder="新しいTodoリストの入力"
-          className="todo-input"
+          value={inputText}
+          onChange={(e) => setInputText(e.target.value)}
         ></input>
-        <button type="submit" className="add-button" onClick={addTodo}>
-          追加
-        </button>
-        {error && <p className="error-message">{error}</p>}
+        <WrapperA></WrapperA>
+        <ComponentB></ComponentB>
       </div>
-      <div className="filter-buttons">
-        <button
-          onClick={() => setFilter("active")}
-          className={filter === "active" ? "active" : ""}
-        >
-          未完了({activeCount})
-        </button>
-        <button
-          onClick={() => setFilter("completed")}
-          className={filter === "completed" ? "active" : ""}
-        >
-          完了({completedCount})
-        </button>
-        <button
-          onClick={() => setFilter("all")}
-          className={filter === "all" ? "active" : ""}
-        >
-          すべて({todos.length})
-        </button>
-      </div>
-      <TodoList
-        todos={filterdTodos}
-        onToggle={toggleTodo}
-        onDelete={deleteTodo}
-      ></TodoList>
-    </div>
+    </TextContext.Provider>
   );
 }
 
